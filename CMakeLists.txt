@@ -28,6 +28,7 @@ TARGET_LINK_LIBRARIES(OEParticleSim
   OpenEngine_Renderers_OpenGL
   OpenEngine_Scene
   # Extensions
+  Extensions_SDL
   Extensions_ParticleSystem
   Extensions_GenericHandlers
 )
