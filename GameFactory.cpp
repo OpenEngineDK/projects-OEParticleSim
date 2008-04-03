@@ -109,11 +109,11 @@ GameFactory::GameFactory() {
 bool GameFactory::SetupEngine(IGameEngine& engine) {
     // First we set the resources directory
     string resourcedir = "./projects/OEParticleSim/data/";
-    ResourceManager::AppendPath(resourcedir);
+    DirectoryManager::AppendPath(resourcedir);
     logger.info << "Resource directory: " << resourcedir << logger.end;
 
     // load the resource plug-ins
-    ResourceManager::AddTexturePlugin(new TGAPlugin());
+    ResourceManager<ITextureResource>::AddPlugin(new TGAPlugin());
 
     // Setup input handling
     SDLInput* input = new SDLInput();
