@@ -32,6 +32,8 @@
 #include <Utils/MoveHandler.h>
 #include <Utils/QuitHandler.h>
 
+#include <GLScreenshot.h>
+
 // from the ParticleSystem extension
 #include <ParticleSystem/ParticleSystem.h>
 
@@ -130,6 +132,8 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     MoveHandler* move_h = new MoveHandler(*camera);
     move_h->RegisterWithEngine(engine);
 
+    GLScreenshot* sshot_h = new GLScreenshot(resourcedir + "screenshots/");
+    sshot_h->RegisterWithEngine(engine);
 
     // Create scene root
     ISceneNode* root = new GLSettings();
