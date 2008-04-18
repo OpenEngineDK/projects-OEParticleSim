@@ -1,0 +1,16 @@
+# Repository Group for the OEParticleSim Project.
+
+# Main repository
+/ http://www.daimi.au.dk/~cgd/openengine
+
+# Project repository
+/projects/OEParticleSim http://www.daimi.au.dk/~cpvc/oe/projects/OEParticleSim
+
+# Required extension repositories
+/extensions/OpenGLRenderer         http://www.daimi.au.dk/~cgd/extensions/OpenGLRenderer
+/extensions/SDL                    http://www.daimi.au.dk/~cgd/extensions/SDL
+/extensions/TGAResource            http://www.daimi.au.dk/~cgd/extensions/TGAResource
+/extensions/OBJResource            http://www.daimi.au.dk/~cgd/extensions/OBJResource
+/extensions/GenericHandlers        http://www.daimi.au.dk/~cgd/extensions/GenericHandlers
+/extensions/ParticleSystem         http://www.daimi.au.dk/~cpvc/oe/extensions/ParticleSystem
+/extensions/GLScreenshot           http://www.daimi.au.dk/~cpvc/oe/extensions/GLScreenshot
