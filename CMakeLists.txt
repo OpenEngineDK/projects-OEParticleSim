@@ -30,7 +30,7 @@ TARGET_LINK_LIBRARIES(OEParticleSim
   # Extensions
   Extensions_SDL
   Extensions_TGAResource
-  Extensions_ParticleSystem
+  Extensions_OEParticleSystem
   Extensions_GenericHandlers
   Extensions_GLScreenshot
 )
