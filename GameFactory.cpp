@@ -94,12 +94,7 @@ GameFactory::GameFactory() {
     // Setup the camera
     camera = new Camera(*(new ViewingVolume()));
     camera->SetPosition(Vector<3,float>(0,20,100));
-    //viewport->SetViewingVolume(camera);
-
-    // frustum hack
-    Frustum* frustum = new Frustum(*camera);
-    frustum->SetFar(1000);
-    viewport->SetViewingVolume(frustum);
+    viewport->SetViewingVolume(camera);
 
     // Add a rendering view to the renderer
     this->renderer->process.Attach(*(new RenderingView(*viewport)));
