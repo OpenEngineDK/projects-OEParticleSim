@@ -52,11 +52,11 @@ public:
     ~FireNode() {
     }
 
-    IParticleGroup* FireNode::GetParticleGroup() {
+    IParticleGroup* GetParticleGroup() {
         return particleGroup;
     }
 
-    ISceneNode* FireNode::GetSceneNode() {
+    ISceneNode* GetSceneNode() {
         return this;
     }
 

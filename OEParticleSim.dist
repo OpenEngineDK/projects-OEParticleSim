@@ -13,7 +13,6 @@ darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TG
 darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/GenericHandlers        http://openengine.dk/code/extensions/GenericHandlers
 darcs /extensions/OEParticleSystem       http://openengine.dk/code/extensions/OEParticleSystem
-darcs /extensions/GLScreenshot           http://openengine.dk/code/extensions/GLScreenshot
 
 #data
 any /projects/OEParticleSim/data    http://www.openengine.dk/data/images/Smoke.zip
