@@ -92,7 +92,8 @@ GameFactory::GameFactory() {
 
     // Setup the camera
     camera = new Camera(*(new ViewingVolume()));
-    camera->SetPosition(Vector<3,float>(0,20,100));
+    camera->SetPosition(Vector<3,float>(100,0,100));
+    camera->LookAt(Vector<3,float>(0.0,0.0,0.0));
     viewport->SetViewingVolume(camera);
 
     // Add a rendering view to the renderer

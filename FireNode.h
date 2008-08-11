@@ -20,15 +20,24 @@
 #include <ParticleSystem/Particles/Orientation.h>
 #include <ParticleSystem/Particles/Lifespan.h>
 
+#include <Renderers/OpenGL/TextureLoader.h>
+#include <Resources/ITextureResource.h>
+#include <Resources/ResourceManager.h>
+
 using namespace OpenEngine::Renderers;
 using namespace OpenEngine::Scene;
 using namespace OpenEngine::ParticleSystem;
+using namespace OpenEngine::Resources;
+using namespace OpenEngine::Renderers::OpenGL;
+
 
 #define TYPE Orientation < Position < Lifespan < IParticle > > >
 
 class FireNode : public IRenderNode {
 private:
     ParticleGroup<TYPE>* particleGroup;
+    ITextureResourcePtr texr;
+
 public:
     FireNode() {
         const unsigned int numberOfParticles = 1000;
@@ -46,6 +55,9 @@ public:
         StaticForceModifier<TYPE>* wind = 
 	  new StaticForceModifier<TYPE>(Vector<3,float>(0.00291,0,0));
         particleGroup->AddModifier( wind );
+    
+        //load texture resource
+        texr = ResourceManager<ITextureResource>::Create("Smoke/smoke01.tga");
     }
 
     ~FireNode() {
@@ -60,32 +72,81 @@ public:
     }
 
     void Apply(IRenderingView* view) {
-      /*
-        IRenderer* rende = view->GetRenderer();
-        Vector<3,float> deactiveColor(1.0,0.0,0.0);
-        Vector<3,float> activeColor(0.0,1.0,0.0);
 
-        // @todo delete all old nodes in the subNodes list
-        this->subNodes.clear();
+            glPushAttrib(GL_LIGHTING);    
+            glDisable(GL_LIGHTING);
+            glDepthMask(GL_FALSE);
+            glEnable(GL_BLEND);
+            glEnable(GL_TEXTURE_2D);
+            glEnable(GL_COLOR_MATERIAL);
+            glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
-        // build new sub node tree
-        TYPE* particles = particleGroup->GetParticles();
-        for (unsigned int i=0; i<particleGroup->GetNumberOfActiveParticles(); i++)
-            this->subNodes.push_back( particles[i].GetBillboard(view->GetViewport().GetViewingVolume()->GetPosition()) );
+            TYPE* particles = particleGroup->GetParticles();
+            logger.info << "num of particles " << particleGroup->GetNumberOfActiveParticles() << logger.end;
+            //glBegin(GL_LINES);
+            for (unsigned int i = 0; i < particleGroup->GetNumberOfActiveParticles(); i++) {
 
-        // render subnodes
-        VisitSubNodes(*view);
+                TYPE particle = particles[i];
 
-        // render particles with the renderes Draw function, this is done last as this destroys the render state.
-        for (unsigned int i=0; i<particleGroup->GetNumberOfParticles(); i++) {
-            if (i < particleGroup->GetNumberOfActiveParticles()) { //draw active particles
-                rende->DrawPoint(particles[i].position, activeColor,5.0);
-                rende->DrawLine(Line(particles[i].position,particles[i].position+ (particles[i].direction*1000)),activeColor,1.0f);
-            } else { // draw deactive particles
-                rende->DrawPoint(particles[i].position, deactiveColor,5.0);
+                //Set texture
+                if (texr != NULL) {
+                    if (texr->GetID() == 0) {
+                        TextureLoader::LoadTextureResource(texr);
+                        //logger.info << texr->GetID() << logger.end;
+                    }
+                    glBindTexture(GL_TEXTURE_2D, texr->GetID());
+                }
+                    
+                else {
+                    glBindTexture(GL_TEXTURE_2D, 0);
+                }
+
+                glPushMatrix();
+                glTranslatef(particle.position[0], particle.position[1], particle.position[2]);
+                
+                // billboard
+                float modelview[16];
+                glGetFloatv(GL_MODELVIEW_MATRIX, modelview);
+                for( int i=0; i<3; i++ ) 
+                    for( int j=0; j<3; j++ ) {
+                        if ( i==j )
+                            modelview[i*4+j] = 1.0;
+                        else
+                            modelview[i*4+j] = 0.0;
+                    }
+                
+                glLoadMatrixf(modelview);
+                
+                // TODO: how to determine rotation
+                //glRotatef(pat.rotation, 0,0,1);
+
+                // constant color
+                float c[4] = {.2,0.0,0.0,1.0};
+                glColor4fv(c);
+ 
+                // constant size 
+                float s = 3.0;
+                
+                glBegin(GL_QUADS);
+                glTexCoord2f(0.0, 0.0);
+                glVertex3f(-1.0*s, -1.0*s, 0.0);
+                glTexCoord2f(0.0, 1.0);
+                glVertex3f(-1.0*s, s*1.0f, 0);
+                glTexCoord2f(1.0, 1.0);
+                glVertex3f(s*1, s*1, 0);
+                glTexCoord2f(1.0, 0.0);
+                glVertex3f(s*1, -1*s, 0);
+
+                glEnd();
+
+                glPopMatrix();
             }
-        }
-      */
+            
+            glDisable(GL_BLEND);
+            glPopAttrib();
+        
+        // render subnodes
+        VisitSubNodes(*view);      
     }
 };
 
