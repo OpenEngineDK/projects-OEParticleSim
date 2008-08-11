@@ -3,8 +3,11 @@
 
 #include <ParticleSystem/ParticleGroup.h>
 #include <ParticleSystem/ParticleSystem.h>
+
 #include <ParticleSystem/StaticForceModifier.h>
 #include <ParticleSystem/RandomTimeBasedEmitterModifier.h>
+#include <ParticleSystem/ColorModifier.h>
+#include <ParticleSystem/SizeModifier.h>
 
 #include <ParticleSystem/IEmitter.h>
 #include <ParticleSystem/PointEmitter.h>
@@ -19,6 +22,8 @@
 #include <ParticleSystem/Particles/Position.h>
 #include <ParticleSystem/Particles/Orientation.h>
 #include <ParticleSystem/Particles/Lifespan.h>
+#include <ParticleSystem/Particles/Color.h>
+#include <ParticleSystem/Particles/Size.h>
 
 #include <Renderers/OpenGL/TextureLoader.h>
 #include <Resources/ITextureResource.h>
@@ -31,7 +36,7 @@ using namespace OpenEngine::Resources;
 using namespace OpenEngine::Renderers::OpenGL;
 
 
-#define TYPE Orientation < Position < Lifespan < IParticle > > >
+#define TYPE Color < Size < Orientation < Position < Lifespan < IParticle > > > > >
 
 class FireNode : public IRenderNode {
 private:
@@ -56,6 +61,14 @@ public:
 	  new StaticForceModifier<TYPE>(Vector<3,float>(0.00291,0,0));
         particleGroup->AddModifier( wind );
     
+        ColorModifier<TYPE>* colormodifier = 
+	  new ColorModifier<TYPE>();
+        particleGroup->AddModifier( colormodifier );
+
+        SizeModifier<TYPE>* sizemodifier = 
+	  new SizeModifier<TYPE>();
+        particleGroup->AddModifier( sizemodifier );
+
         //load texture resource
         texr = ResourceManager<ITextureResource>::Create("Smoke/smoke01.tga");
     }
@@ -82,7 +95,7 @@ public:
             glBlendFunc(GL_ONE,GL_ONE_MINUS_SRC_ALPHA);
 
             TYPE* particles = particleGroup->GetParticles();
-            logger.info << "num of particles " << particleGroup->GetNumberOfActiveParticles() << logger.end;
+
             //glBegin(GL_LINES);
             for (unsigned int i = 0; i < particleGroup->GetNumberOfActiveParticles(); i++) {
 
@@ -120,8 +133,15 @@ public:
                 // TODO: how to determine rotation
                 //glRotatef(pat.rotation, 0,0,1);
 
+		float scale = particle.size;
+		glScalef(scale,scale,scale);
+		
                 // constant color
                 float c[4] = {.2,0.0,0.0,1.0};
+
+		for(unsigned int i=0;i<4;i++)
+		  c[i] = particle.color[i];
+
                 glColor4fv(c);
  
                 // constant size 
