@@ -137,8 +137,9 @@ bool GameFactory::SetupEngine(IGameEngine& engine) {
     ParticleSystem* particleSystem = new ParticleSystem();
     engine.AddModule(*particleSystem);
 
-    FireNode* fireNode = new FireNode(particleSystem);
+    FireNode* fireNode = new FireNode();
     root->AddNode( fireNode );
+    particleSystem->AddParticleGroup(fireNode->GetParticleGroup());
 
     // Return true to signal success.
     return true;

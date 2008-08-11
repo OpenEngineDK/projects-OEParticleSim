@@ -30,10 +30,9 @@ class FireNode : public IRenderNode {
 private:
     ParticleGroup<TYPE>* particleGroup;
 public:
-    FireNode(ParticleSystem* particleSystem) {
+    FireNode() {
         const unsigned int numberOfParticles = 1000;
         particleGroup = new ParticleGroup<TYPE>(numberOfParticles);
-        particleSystem->AddParticleGroup(particleGroup);
 
         // emitter
         IEmitter* emitter = new PointEmitter(Vector<3,float>(0.1f));
