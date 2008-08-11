@@ -4,7 +4,7 @@
 darcs / http://openengine.dk/code/openengine
 
 # Project repository
-darcs /projects/OEParticleSim fh.daimi.au.dk:/users/cpvc/public_html/oe/projects/OEParticleSim
+darcs /projects/OEParticleSim http://daimi.au.dk/~cpvc/oe/projects/OEParticleSim
 
 # Required extension repositories
 darcs /extensions/OpenGLRenderer         http://openengine.dk/code/extensions/OpenGLRenderer
