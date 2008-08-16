@@ -6,7 +6,6 @@ SET( PROJECT_NAME "OEParticleSim")
 SET( PROJECT_SOURCES
   # Add all the cpp source files here
     main.cpp
-    GameFactory.cpp
 )
 # Include needed to use SDL under Mac OS X
 IF(APPLE)
@@ -27,9 +26,10 @@ TARGET_LINK_LIBRARIES(OEParticleSim
   OpenEngine_Devices
   OpenEngine_Renderers_OpenGL
   OpenEngine_Scene
-  # Extensions
+  OpenEngine_Resources
+ # Extensions
   Extensions_SDL
   Extensions_TGAResource
-  Extensions_OEParticleSystem
+#  Extensions_OEParticleSystem
   Extensions_GenericHandlers
 )
