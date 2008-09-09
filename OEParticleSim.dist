@@ -1,18 +1,27 @@
 # dist file for the OEParticleSim Project.
 
 # Main repository
-darcs / http://openengine.dk/code/openengine
+darcs     / http://openengine.dk/code/openengine
+darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
 
 # Project repository
-darcs /projects/OEParticleSim http://openengine.dk/code/projects/OEParticleSim
+darcs     /projects/OEParticleSim http://openengine.dk/code/projects/OEParticleSim
+darcs-dev /projects/OEParticleSim fh.daimi.au.dk:/users/cgd/code/projects/OEParticleSim
 
 # Required extension repositories
-darcs /extensions/OpenGLRenderer         http://openengine.dk/code/extensions/OpenGLRenderer
-darcs /extensions/SDL                    http://openengine.dk/code/extensions/SDL
-darcs /extensions/TGAResource            http://openengine.dk/code/extensions/TGAResource
-darcs /extensions/OBJResource            http://openengine.dk/code/extensions/OBJResource
-darcs /extensions/GenericHandlers        http://openengine.dk/code/extensions/GenericHandlers
-darcs /extensions/OEParticleSystem       http://openengine.dk/code/extensions/OEParticleSystem
+darcs /extensions/OpenGLRenderer             http://openengine.dk/code/extensions/OpenGLRenderer
+darcs /extensions/SDL                        http://openengine.dk/code/extensions/SDL
+darcs /extensions/TGAResource                http://openengine.dk/code/extensions/TGAResource
+darcs /extensions/OBJResource                http://openengine.dk/code/extensions/OBJResource
+darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
+darcs /extensions/OEParticleSystem           http://openengine.dk/code/extensions/OEParticleSystem
+
+darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
+darcs-dev /extensions/SDL                    fh.daimi.au.dk:/users/cgd/code/extensions/SDL
+darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
+darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
+darcs-dev /extensions/GenericHandlers        fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
+darcs-dev /extensions/OEParticleSystem       fh.daimi.au.dk:/users/cgd/code/extensions/OEParticleSystem
 
 #data
 any /projects/OEParticleSim/data    http://www.openengine.dk/data/images/Smoke.zip
