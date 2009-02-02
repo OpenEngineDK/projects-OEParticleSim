@@ -29,6 +29,7 @@ TARGET_LINK_LIBRARIES(OEParticleSim
  # Extensions
   Extensions_SDL
   Extensions_TGAResource
+  Extensions_OpenGLRenderer
 #  Extensions_OEParticleSystem
   Extensions_GenericHandlers
 )

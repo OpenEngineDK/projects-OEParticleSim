@@ -25,11 +25,12 @@
 
 // Particle System 
 #include <ParticleSystem/ParticleSystem.h>
+#include <Effects/FireEffect.h>
 
 // OpenGL rendering implementation
 #include <Renderers/OpenGL/Renderer.h>
 #include <Renderers/OpenGL/RenderingView.h>
-#include <Renderers/OpenGL/TextureLoader.h>
+#include <Renderers/TextureLoader.h>
 
 // Resources
 #include <Resources/File.h>
@@ -51,7 +52,7 @@
 #include <Utils/QuitHandler.h>
 
 // OEParticleSim utility files
-#include "FireNode.h"
+//#include "FireNode.h"
 
 // Additional namespaces
 using namespace OpenEngine::Core;
@@ -63,6 +64,7 @@ using namespace OpenEngine::Resources;
 using namespace OpenEngine::Utils;
 using namespace OpenEngine::Display;
 using namespace OpenEngine::ParticleSystem;
+using namespace OpenEngine::Effects;
 
 // Configuration structure to pass around to the setup methods
 struct Config {
@@ -78,6 +80,7 @@ struct Config {
     ISceneNode*           scene;
     ParticleSystem*       particleSystem;
     bool                  resourcesLoaded;
+    TextureLoader*        tl;
     Config(IEngine& engine)
         : engine(engine)
         , frame(NULL)
@@ -91,6 +94,7 @@ struct Config {
         , scene(NULL)
         , particleSystem(NULL)
         , resourcesLoaded(false)
+        , tl(NULL)
     {}
 };
 
@@ -133,13 +137,12 @@ int main(int argc, char** argv) {
     // Setup the engine
     SetupResources(config);
     SetupDisplay(config);
-    SetupParticleSystem(config);
-    SetupScene(config);
-    SetupRendering(config);
     SetupDevices(config);
-    
+    SetupParticleSystem(config);
+    SetupRendering(config);
+    SetupScene(config);
     // Possibly add some debugging stuff
-    // SetupDebugging(config);
+    SetupDebugging(config);
 
     // Start up the engine.
     engine->Start();
@@ -184,23 +187,19 @@ void SetupDisplay(Config& config) {
 
 void SetupRendering(Config& config) {
     if (config.viewport == NULL ||
-        config.renderer != NULL ||
-        config.scene == NULL)
+        config.renderer != NULL)
         throw Exception("Setup renderer dependencies are not satisfied.");
 
     // Create a renderer
-    config.renderer = new Renderer();
+    config.renderer = new OpenGL::Renderer(config.viewport);
 
     // Setup a rendering view
-    RenderingView* rv = new RenderingView(*config.viewport);
+    IRenderingView* rv = new OpenGL::RenderingView(*config.viewport);
     config.renderer->ProcessEvent().Attach(*rv);
 
     // Add rendering initialization tasks
-    TextureLoader* tl = new TextureLoader();
-    config.renderer->InitializeEvent().Attach(*tl);
-
-    // Supply the scene to the renderer
-    config.renderer->SetSceneRoot(config.scene);
+    config.tl = new TextureLoader(*config.renderer);
+    config.renderer->PreProcessEvent().Attach(*config.tl);
 
     config.engine.InitializeEvent().Attach(*config.renderer);
     config.engine.ProcessEvent().Attach(*config.renderer);
@@ -244,7 +243,6 @@ void SetupParticleSystem (Config& config) {
     config.engine.InitializeEvent().Attach(*config.particleSystem);
     config.engine.ProcessEvent().Attach(*pstimer);
     config.engine.DeinitializeEvent().Attach(*config.particleSystem);
-
 }
 
 void SetupScene(Config& config) {
@@ -259,20 +257,24 @@ void SetupScene(Config& config) {
 
     // Create scene nodes
     config.scene = new SceneNode();
+    config.renderer->SetSceneRoot(config.scene);
 
 
-    FireNode* fireNode = new FireNode(config.particleSystem);
-    config.scene->AddNode( fireNode );
-    config.particleSystem->ProcessEvent().Attach(*fireNode);
+
+    FireEffect* fire = new FireEffect(*config.particleSystem, *config.tl);
+    fire->AddTexture(ResourceManager<ITextureResource>::Create("Smoke/smoke01.tga"));
+    config.scene->AddNode( fire->GetSceneNode() );
+    config.particleSystem->ProcessEvent().Attach(*fire);
+    fire->SetActive(true);
 }
 
 void SetupDebugging(Config& config) {
 
     // Visualization of the frustum
-    if (config.frustum != NULL) {
-        config.frustum->VisualizeClipping(true);
-        config.scene->AddNode(config.frustum->GetFrustumNode());
-    }
+//     if (config.frustum != NULL) {
+//         config.frustum->VisualizeClipping(true);
+//         config.scene->AddNode(config.frustum->GetFrustumNode());
+//     }
 
     // Add Statistics module
     config.engine.ProcessEvent().Attach(*(new OpenEngine::Utils::Statistics(1000)));
