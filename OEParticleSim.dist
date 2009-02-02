@@ -15,6 +15,7 @@ darcs /extensions/TGAResource                http://openengine.dk/code/extension
 darcs /extensions/OBJResource                http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
 darcs /extensions/OEParticleSystem           http://openengine.dk/code/extensions/OEParticleSystem
+darcs /extensions/Effects                    http://openengine.dk/code/extensions/Effects
 
 darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
 darcs-dev /extensions/SDL                    fh.daimi.au.dk:/users/cgd/code/extensions/SDL
