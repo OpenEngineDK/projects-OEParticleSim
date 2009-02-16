@@ -52,7 +52,7 @@
 #include <Utils/QuitHandler.h>
 
 // OEParticleSim utility files
-//#include "FireNode.h"
+#include "Fire.h"
 
 // Additional namespaces
 using namespace OpenEngine::Core;
@@ -261,8 +261,7 @@ void SetupScene(Config& config) {
 
 
 
-    FireEffect* fire = new FireEffect(*config.particleSystem, *config.tl);
-    fire->AddTexture(ResourceManager<ITextureResource>::Create("Smoke/smoke01.tga"));
+    Fire* fire = new Fire(*config.particleSystem, *config.tl);
     config.scene->AddNode( fire->GetSceneNode() );
     config.particleSystem->ProcessEvent().Attach(*fire);
     fire->SetActive(true);
