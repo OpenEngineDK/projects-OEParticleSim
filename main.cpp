@@ -20,8 +20,7 @@
 #include <Display/IFrame.h>
 
 // SDL implementation
-#include <Display/SDLFrame.h>
-#include <Devices/SDLInput.h>
+#include <Display/SDLEnvironment.h>
 
 // Particle System 
 #include <ParticleSystem/ParticleSystem.h>
@@ -69,6 +68,7 @@ using namespace OpenEngine::Effects;
 // Configuration structure to pass around to the setup methods
 struct Config {
     IEngine&              engine;
+    IEnvironment*         env;
     IFrame*               frame;
     Viewport*             viewport;
     IViewingVolume*       viewingvolume;
@@ -173,16 +173,17 @@ void SetupDisplay(Config& config) {
         config.viewport      != NULL)
         throw Exception("Setup display dependencies are not satisfied.");
 
-    config.frame         = new SDLFrame(800, 600, 32);
+    config.env           = new SDLEnvironment();
+    config.frame         = &config.env->GetFrame();
     config.viewingvolume = new ViewingVolume();
     config.camera        = new Camera( *config.viewingvolume );
-    config.frustum       = new Frustum(*config.camera, 20, 3000);
+    config.frustum       = new Frustum(*config.camera, 3000);
     config.viewport      = new Viewport(*config.frame);
     config.viewport->SetViewingVolume(config.frustum);
 
-    config.engine.InitializeEvent().Attach(*config.frame);
-    config.engine.ProcessEvent().Attach(*config.frame);
-    config.engine.DeinitializeEvent().Attach(*config.frame);
+    config.engine.InitializeEvent().Attach(*config.env);
+    config.engine.ProcessEvent().Attach(*config.env);
+    config.engine.DeinitializeEvent().Attach(*config.env);
 }
 
 void SetupRendering(Config& config) {
@@ -213,8 +214,8 @@ void SetupDevices(Config& config) {
         throw Exception("Setup keyboard dependencies are not satisfied.");
 
     // Create the mouse and keyboard input modules
-    config.keyboard = new SDLInput();
-    config.mouse = (IMouse*)config.keyboard;
+    config.keyboard = config.env->GetKeyboard();
+    config.mouse = config.env->GetMouse();
 
     // Bind the quit handler
     QuitHandler* quit_h = new QuitHandler(config.engine);
@@ -225,10 +226,6 @@ void SetupDevices(Config& config) {
     config.keyboard->KeyEvent().Attach(*move_h);
 
     // Bind to the engine for processing time
-    config.engine.InitializeEvent().Attach(*config.mouse);
-    config.engine.ProcessEvent().Attach(*config.mouse);
-    config.engine.DeinitializeEvent().Attach(*config.mouse);
-
     config.engine.InitializeEvent().Attach(*move_h);
     config.engine.ProcessEvent().Attach(*move_h);
     config.engine.DeinitializeEvent().Attach(*move_h);
