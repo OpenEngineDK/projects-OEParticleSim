@@ -29,8 +29,9 @@ TARGET_LINK_LIBRARIES(OEParticleSim
   OpenEngine_Resources
  # Extensions
   Extensions_SDL
-  Extensions_TGAResource
+  Extensions_SDLImage
   Extensions_OpenGLRenderer
 #  Extensions_OEParticleSystem
   Extensions_GenericHandlers
+  Extensions_OpenGLSelection
 )

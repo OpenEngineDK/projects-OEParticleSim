@@ -20,9 +20,9 @@ using OpenEngine::Resources::ResourceManager;
 using OpenEngine::Resources::ITextureResource;
 
 Fire::Fire(OpenEngine::ParticleSystem::ParticleSystem& system,
-                           TextureLoader& textureLoader):
+           TextureLoader& textureLoader):
                            
-    FireEffect(system,
+    FireEffectEdit(system,
                200,     //numParticles
                0.04,    //emitRate
                6.0,     //number 

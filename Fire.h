@@ -10,7 +10,7 @@
 #ifndef _OESIM_FIRE_EFFECT_
 #define _OESIM_FIRE_EFFECT_
 
-#include <Effects/FireEffect.h>
+#include <Effects/FireEffectEdit.h>
 
 namespace OpenEngine {
     namespace ParticleSystem {
@@ -23,16 +23,16 @@ namespace OpenEngine {
     }
 }
 
-using OpenEngine::Effects::FireEffect;
+using OpenEngine::Effects::FireEffectEdit;
 using OpenEngine::Renderers::TextureLoader;
 
 using OpenEngine::ParticleSystem::ParticleEventArg;
 
-class Fire : public FireEffect {
+class Fire : public FireEffectEdit {
 private:
 public:
     Fire(OpenEngine::ParticleSystem::ParticleSystem& system,
-                 TextureLoader& textureLoader);
+         TextureLoader& textureLoader);
     
     virtual ~Fire();
 

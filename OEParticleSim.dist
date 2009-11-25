@@ -10,19 +10,24 @@ darcs-dev /projects/OEParticleSim fh.daimi.au.dk:/users/cgd/code/projects/OEPart
 
 # Required extension repositories
 darcs /extensions/OpenGLRenderer             http://openengine.dk/code/extensions/OpenGLRenderer
+darcs /extensions/OpenGLSelection            http://openengine.dk/code/extensions/OpenGLSelection
 darcs /extensions/SDL                        http://openengine.dk/code/extensions/SDL
-darcs /extensions/TGAResource                http://openengine.dk/code/extensions/TGAResource
+darcs /extensions/SDLFont                    http://openengine.dk/code/extensions/SDLFont
+darcs /extensions/SDLImage                   http://openengine.dk/code/extensions/SDLImage
 darcs /extensions/OBJResource                http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
 darcs /extensions/OEParticleSystem           http://openengine.dk/code/extensions/OEParticleSystem
 darcs /extensions/Effects                    http://openengine.dk/code/extensions/Effects
 
 darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
+darcs-dev /extensions/OpenGLSelection        fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
 darcs-dev /extensions/SDL                    fh.daimi.au.dk:/users/cgd/code/extensions/SDL
-darcs-dev /extensions/TGAResource            fh.daimi.au.dk:/users/cgd/code/extensions/TGAResource
+darcs-dev /extensions/SDLFont                fh.daimi.au.dk:/users/cgd/code/extensions/SDLFont
+darcs-dev /extensions/SDLImage               fh.daimi.au.dk:/users/cgd/code/extensions/SDLImage
 darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
 darcs-dev /extensions/GenericHandlers        fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
 darcs-dev /extensions/OEParticleSystem       fh.daimi.au.dk:/users/cgd/code/extensions/OEParticleSystem
 
 #data
-any /projects/OEParticleSim/data    http://www.openengine.dk/data/images/Smoke.zip
+any /projects/OEParticleSim/data/Fonts  http://openengine.dk/data/fonts/freefont-ttf-20090104.tar.gz
+any /projects/OEParticleSim/data        http://www.openengine.dk/data/images/Smoke.zip

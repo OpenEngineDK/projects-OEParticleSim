@@ -25,6 +25,7 @@
 // Particle System 
 #include <ParticleSystem/ParticleSystem.h>
 #include <Effects/FireEffect.h>
+#include <Effects/FireEffectEdit.h>
 
 // OpenGL rendering implementation
 #include <Renderers/OpenGL/Renderer.h>
@@ -36,8 +37,8 @@
 #include <Resources/DirectoryManager.h>
 #include <Resources/ResourceManager.h>
 
-// OBJ and TGA plugins
-#include <Resources/TGAResource.h>
+// OBJ and SDLImage plugins
+#include <Resources/SDLImage.h>
 #include <Resources/OBJResource.h>
 
 // Scene structures
@@ -47,11 +48,21 @@
 #include <Logging/Logger.h>
 #include <Logging/StreamLogger.h>
 #include <Utils/Statistics.h>
-#include <Utils/MoveHandler.h>
+// #include <Utils/MoveHandler.h>
 #include <Utils/QuitHandler.h>
 
 // OEParticleSim utility files
 #include "Fire.h"
+
+// mouse tools
+#include <Utils/MouseSelection.h>
+#include <Utils/SelectionSet.h>
+#include <Utils/SelectionTool.h>
+// #include <Utils/TransformationTool.h>
+#include <Utils/CameraTool.h>
+#include <Utils/WidgetTool.h>
+#include <Utils/ToolChain.h>
+#include <Resources/SDLFont.h>
 
 // Additional namespaces
 using namespace OpenEngine::Core;
@@ -81,6 +92,8 @@ struct Config {
     ParticleSystem*       particleSystem;
     bool                  resourcesLoaded;
     TextureLoader*        tl;
+    MouseSelection*       ms;
+    Fire*                 fire;
     Config(IEngine& engine)
         : engine(engine)
         , frame(NULL)
@@ -95,6 +108,8 @@ struct Config {
         , particleSystem(NULL)
         , resourcesLoaded(false)
         , tl(NULL)
+        , ms(NULL)
+        , fire(NULL)
     {}
 };
 
@@ -160,7 +175,9 @@ void SetupResources(Config& config) {
 
     // load resource plug-ins
     //ResourceManager<IModelResource>::AddPlugin(new OBJPlugin());
-    ResourceManager<ITextureResource>::AddPlugin(new TGAPlugin());
+    //    ResourceManager<ITextureResource>::AddPlugin(new TGAPlugin());
+    ResourceManager<ITextureResource>::AddPlugin(new SDLImagePlugin());
+    ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
 
     config.resourcesLoaded = true;
 }
@@ -205,6 +222,32 @@ void SetupRendering(Config& config) {
     config.engine.InitializeEvent().Attach(*config.renderer);
     config.engine.ProcessEvent().Attach(*config.renderer);
     config.engine.DeinitializeEvent().Attach(*config.renderer);
+
+
+    config.ms = new MouseSelection(*config.frame, *config.mouse, NULL);
+
+    config.fire = new Fire(*config.particleSystem, *config.tl);
+
+    SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
+    // TransformationTool* tt = new TransformationTool(*config.tl);
+    // ss->ChangedEvent().Attach(*tt);
+    CameraTool* ct   = new CameraTool();
+    WidgetTool* wt   = new WidgetTool(*config.tl);
+    ToolChain*  tc   = new ToolChain();
+    SelectionTool* st = new SelectionTool(*ss);
+    tc->PushBackTool(wt);
+    tc->PushBackTool(ct);
+    tc->PushBackTool(st);
+
+    wt->AddWidget(config.fire->GetWidget());
+
+    config.ms->BindTool(config.viewport, tc);
+
+    config.renderer->PostProcessEvent().Attach(*config.ms);
+    config.mouse->MouseMovedEvent().Attach(*config.ms);
+    config.mouse->MouseButtonEvent().Attach(*config.ms);
+    config.keyboard->KeyEvent().Attach(*config.ms);
+
 }
 
 void SetupDevices(Config& config) {
@@ -222,13 +265,13 @@ void SetupDevices(Config& config) {
     config.keyboard->KeyEvent().Attach(*quit_h);
 
 //     // Register movement handler to be able to move the camera
-    MoveHandler* move_h = new MoveHandler(*config.camera, *config.mouse);
-    config.keyboard->KeyEvent().Attach(*move_h);
+    // MoveHandler* move_h = new MoveHandler(*config.camera, *config.mouse);
+    // config.keyboard->KeyEvent().Attach(*move_h);
 
     // Bind to the engine for processing time
-    config.engine.InitializeEvent().Attach(*move_h);
-    config.engine.ProcessEvent().Attach(*move_h);
-    config.engine.DeinitializeEvent().Attach(*move_h);
+    // config.engine.InitializeEvent().Attach(*move_h);
+    // config.engine.ProcessEvent().Attach(*move_h);
+    // config.engine.DeinitializeEvent().Attach(*move_h);
 }
 
 void SetupParticleSystem (Config& config) {
@@ -255,13 +298,11 @@ void SetupScene(Config& config) {
     // Create scene nodes
     config.scene = new SceneNode();
     config.renderer->SetSceneRoot(config.scene);
+    config.ms->SetScene(config.scene);
 
-
-
-    Fire* fire = new Fire(*config.particleSystem, *config.tl);
-    config.scene->AddNode( fire->GetSceneNode() );
-    config.particleSystem->ProcessEvent().Attach(*fire);
-    fire->SetActive(true);
+    config.scene->AddNode( config.fire->GetSceneNode() );
+    config.particleSystem->ProcessEvent().Attach(*config.fire);
+    config.fire->SetActive(true);
 }
 
 void SetupDebugging(Config& config) {
@@ -273,5 +314,5 @@ void SetupDebugging(Config& config) {
 //     }
 
     // Add Statistics module
-    config.engine.ProcessEvent().Attach(*(new OpenEngine::Utils::Statistics(1000)));
+    //config.engine.ProcessEvent().Attach(*(new OpenEngine::Utils::Statistics(1000)));
 }
