@@ -30,4 +30,5 @@ darcs-dev /extensions/OEParticleSystem       fh.daimi.au.dk:/users/cgd/code/exte
 
 #data
 any /projects/OEParticleSim/data/Fonts  http://openengine.dk/data/fonts/freefont-ttf-20090104.tar.gz
+any /projects/OEParticleSim/data        http://openengine.dk/data/images/slider_bg.png
 any /projects/OEParticleSim/data        http://www.openengine.dk/data/images/Smoke.zip
