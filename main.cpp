@@ -239,7 +239,7 @@ void SetupRendering(Config& config) {
     tc->PushBackTool(ct);
     tc->PushBackTool(st);
 
-    wt->AddWidget(config.fire->GetWidget());
+    wt->AddWidget(new FireEffectEditWidget(config.fire));
 
     config.ms->BindTool(config.viewport, tc);
 
