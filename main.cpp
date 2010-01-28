@@ -62,7 +62,8 @@
 #include <Utils/CameraTool.h>
 #include <Utils/WidgetTool.h>
 #include <Utils/ToolChain.h>
-#include <Resources/SDLFont.h>
+//#include <Resources/SDLFont.h>
+#include <Resources/CairoFont.h>
 
 // Additional namespaces
 using namespace OpenEngine::Core;
@@ -177,7 +178,8 @@ void SetupResources(Config& config) {
     //ResourceManager<IModelResource>::AddPlugin(new OBJPlugin());
     //    ResourceManager<ITextureResource>::AddPlugin(new TGAPlugin());
     ResourceManager<ITextureResource>::AddPlugin(new SDLImagePlugin());
-    ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
+    // ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
+    ResourceManager<IFontResource>::AddPlugin(new CairoFontPlugin());
 
     config.resourcesLoaded = true;
 }

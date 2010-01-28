@@ -13,6 +13,7 @@ darcs /extensions/OpenGLRenderer             http://openengine.dk/code/extension
 darcs /extensions/OpenGLSelection            http://openengine.dk/code/extensions/OpenGLSelection
 darcs /extensions/SDL                        http://openengine.dk/code/extensions/SDL
 darcs /extensions/SDLFont                    http://openengine.dk/code/extensions/SDLFont
+darcs /extensions/CairoResource              http://openengine.dk/code/extensions/CairoResource
 darcs /extensions/SDLImage                   http://openengine.dk/code/extensions/SDLImage
 darcs /extensions/OBJResource                http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
@@ -23,6 +24,7 @@ darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/OpenGLSelection        fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
 darcs-dev /extensions/SDL                    fh.daimi.au.dk:/users/cgd/code/extensions/SDL
 darcs-dev /extensions/SDLFont                fh.daimi.au.dk:/users/cgd/code/extensions/SDLFont
+darcs-dev /extensions/CairoResource          fh.daimi.au.dk:/users/cgd/code/extensions/CairoResource
 darcs-dev /extensions/SDLImage               fh.daimi.au.dk:/users/cgd/code/extensions/SDLImage
 darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
 darcs-dev /extensions/GenericHandlers        fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
