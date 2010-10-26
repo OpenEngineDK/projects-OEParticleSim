@@ -131,12 +131,56 @@ ValueList Inspect(FireEffect* fire) {
         v->properties[STEP] = 0.001;
         values.push_back(v);
     }
+    /* Size */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetSize,
+                                                     &SimpleEmitter::SetSize);
+        v->name = "size";
+        v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.1;
+        values.push_back(v);
+    }
+
     /* Speed */ {
         RWValueCall<SimpleEmitter, float > *v
             = new RWValueCall<SimpleEmitter, float >(*emit,
                                                      &SimpleEmitter::GetSpeed,
                                                      &SimpleEmitter::SetSpeed);
         v->name = "speed";
+        // v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.1;
+        values.push_back(v);
+    } 
+
+    /* Life variance */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetLifeVar,
+                                                     &SimpleEmitter::SetLifeVar);
+        v->name = "life variance";
+        v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.001;
+        values.push_back(v);
+    }
+
+    /* Size variance */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetSizeVar,
+                                                     &SimpleEmitter::SetSizeVar);
+        v->name = "size variance";
+        v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.1;
+        values.push_back(v);
+    }
+
+    /* Speed variance */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetSpeedVar,
+                                                     &SimpleEmitter::SetSpeedVar);
+        v->name = "speed variance";
         // v->properties[MIN] = 0.0;
         v->properties[STEP] = 0.1;
         values.push_back(v);
