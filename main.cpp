@@ -91,22 +91,44 @@ ValueList Inspect(FireEffect* fire) {
     SimpleEmitter *emit = fire->GetEmitter();
     ValueList values;
 
-    /* particle count */
+    /* particle count */ {
         RWValueCall<SimpleEmitter, unsigned int > *v
             = new RWValueCall<SimpleEmitter, unsigned int >(*emit,
-                                                     &SimpleEmitter::GetNumParticles,
-                                                     &SimpleEmitter::SetNumParticles);
+                                                            &SimpleEmitter::GetNumParticles,
+                                                            &SimpleEmitter::SetNumParticles);
         v->name = "count";
-        v->properties[MIN] = 1;
+        v->properties[MIN] = 0.0;
         values.push_back(v);
-
+    }
+    /* emit interval */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetEmitInterval,
+                                                     &SimpleEmitter::SetEmitInterval);
+        v->name = "emit interval";
+        v->properties[MIN] = 0.001;
+        v->properties[STEP] = 0.001;
+        values.push_back(v);
+    }
+    /* angle */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetAngle,
+                                                     &SimpleEmitter::SetAngle);
+        v->name = "angle";
+        v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.01;
+        v->properties[MAX] = Math::PI*2;
+        values.push_back(v);
+    }
     /* Life */ {
         RWValueCall<SimpleEmitter, float > *v
             = new RWValueCall<SimpleEmitter, float >(*emit,
                                                      &SimpleEmitter::GetLife,
                                                      &SimpleEmitter::SetLife);
         v->name = "life";
-        v->properties[MIN] = 0;
+        v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.001;
         values.push_back(v);
     }
     /* Speed */ {
@@ -115,7 +137,8 @@ ValueList Inspect(FireEffect* fire) {
                                                      &SimpleEmitter::GetSpeed,
                                                      &SimpleEmitter::SetSpeed);
         v->name = "speed";
-        v->properties[MIN] = 0;
+        // v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.1;
         values.push_back(v);
     } 
     /* Gravity */ {
@@ -139,7 +162,7 @@ struct Config {
     IEngine&              engine;
     IEnvironment*         env;
     IFrame*               frame;
-    IRenderCanvas*              canvas;
+    IRenderCanvas*        canvas;
     IViewingVolume*       viewingvolume;
     Camera*               camera;
     IRenderer*            renderer;
@@ -277,8 +300,6 @@ void SetupRendering(Config& config) {
     // config.ms = new MouseSelection(*config.frame, *config.mouse, NULL);
 
     config.fire = new FireEffect(*config.particleSystem);
-
-
 
     // SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
     // TransformationTool* tt = new TransformationTool(*config.tl);
