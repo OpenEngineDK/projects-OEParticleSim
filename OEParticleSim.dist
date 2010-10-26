@@ -19,6 +19,7 @@ darcs /extensions/OBJResource                http://openengine.dk/code/extension
 darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
 darcs /extensions/OEParticleSystem           http://openengine.dk/code/extensions/OEParticleSystem
 darcs /extensions/Effects                    http://openengine.dk/code/extensions/Effects
+darcs /extensions/HUD                        http://openengine.dk/code/extensions/HUD
 
 darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer
 darcs-dev /extensions/OpenGLSelection        fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLSelection
@@ -29,8 +30,10 @@ darcs-dev /extensions/SDLImage               fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
 darcs-dev /extensions/GenericHandlers        fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
 darcs-dev /extensions/OEParticleSystem       fh.daimi.au.dk:/users/cgd/code/extensions/OEParticleSystem
+darcs-dev /extensions/HUD                    fh.daimi.au.dk:/users/cgd/code/extensions/HUD
 
 #data
 any /projects/OEParticleSim/data/Fonts  http://openengine.dk/data/fonts/freefont-ttf-20090104.tar.gz
 any /projects/OEParticleSim/data        http://openengine.dk/data/images/slider_bg.png
 any /projects/OEParticleSim/data        http://www.openengine.dk/data/images/Smoke.zip
+any /projects/OEParticleSim/data        http://www.openengine.dk/data/images/star.jpg

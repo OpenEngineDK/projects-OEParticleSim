@@ -6,7 +6,7 @@ SET( PROJECT_NAME "OEParticleSim")
 SET( PROJECT_SOURCES
   # Add all the cpp source files here
     main.cpp
-    Fire.cpp
+#    Fire.cpp
 )
 # Include needed to use SDL under Mac OS X
 IF(APPLE)
@@ -34,4 +34,5 @@ TARGET_LINK_LIBRARIES(OEParticleSim
 #  Extensions_OEParticleSystem
   Extensions_GenericHandlers
   Extensions_OpenGLSelection
+  Extensions_HUD
 )

@@ -13,11 +13,12 @@
 #include <ParticleSystem/ParticleSystem.h>
 #include <Renderers/TextureLoader.h>
 #include <Resources/ResourceManager.h>
-#include <Resources/ITextureResource.h>
+#include <Resources/ITexture2D.h>
+#include <Math/Math.h>
 
 using OpenEngine::Math::Vector;
 using OpenEngine::Resources::ResourceManager;
-using OpenEngine::Resources::ITextureResource;
+using OpenEngine::Resources::ITexture2D;
 
 Fire::Fire(OpenEngine::ParticleSystem::ParticleSystem& system,
            TextureLoader& textureLoader):
@@ -25,21 +26,24 @@ Fire::Fire(OpenEngine::ParticleSystem::ParticleSystem& system,
     FireEffectEdit(system,
                200,     //numParticles
                0.04,    //emitRate
-               6.0,     //number 
+               8.0,     //number 
                2.0,     //numberVar
-               1.1,     //life
-               0.5,     //lifeVar
-               0.17,    //angle
-               230.0,   //spin
-               100.0,   //spinVar
-               45.0,    //speed
-               10.0,    //speedVar
-               Vector<3,float>(0,0.295,0),       //antigravity
+               .8,     //life
+               0.2,     //lifeVar
+               2*OpenEngine::Math::PI,    //angle
+               0.0,   //spin
+               0.0,   //spinVar
+               10.0,    //speed
+               1.0,    //speedVar
+               Vector<3,float>(0,200.82,0),       //antigravity
                textureLoader)
 {
 
-    ITextureResourcePtr tex1 = 
-        ResourceManager<ITextureResource>::Create("Smoke/smoke01.tga");
+    ITexture2DPtr tex1 = 
+        // ResourceManager<ITexture2D>::Create("Smoke/smoke01.tga");
+        // ResourceManager<ITexture2D>::Create("fire.jpg");
+        //ResourceManager<ITexture2D>::Create("RealFlame_02.png");
+        ResourceManager<ITexture2D>::Create("star.jpg");
     AddTexture(tex1);
 
 
@@ -50,10 +54,10 @@ Fire::Fire(OpenEngine::ParticleSystem::ParticleSystem& system,
     colormod.AddValue( .0, Vector<4,float>(0.1,  0.1,  .3, .1)); // blueish
 
     // size variations 
-    sizem.AddValue(1.0, 4); 
-    sizem.AddValue(.65, 7);
-    sizem.AddValue( .18, 6);    
-    sizem.AddValue( .0, 3);    
+    sizem.AddValue(1.0, 30); 
+    // sizem.AddValue(.65, 7);
+    // sizem.AddValue( .18, 6);    
+    sizem.AddValue( .0, 20);    
     
     system.ProcessEvent().Attach(*this);
 }

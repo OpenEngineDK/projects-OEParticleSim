@@ -14,18 +14,18 @@
 #include <Core/Engine.h>
 
 // Display structures
-#include <Display/Frustum.h>
 #include <Display/ViewingVolume.h>
 #include <Display/Camera.h>
-#include <Display/IFrame.h>
+#include <Display/OpenGL/RenderCanvas.h>
 
 // SDL implementation
 #include <Display/SDLEnvironment.h>
 
 // Particle System 
+#include <Renderers/OpenGL/ParticleRenderer.h>
 #include <ParticleSystem/ParticleSystem.h>
 #include <Effects/FireEffect.h>
-#include <Effects/FireEffectEdit.h>
+// #include <Effects/FireEffectEdit.h>
 
 // OpenGL rendering implementation
 #include <Renderers/OpenGL/Renderer.h>
@@ -48,28 +48,31 @@
 #include <Logging/Logger.h>
 #include <Logging/StreamLogger.h>
 #include <Utils/Statistics.h>
-// #include <Utils/MoveHandler.h>
+#include <Utils/BetterMoveHandler.h>
 #include <Utils/QuitHandler.h>
 
 // OEParticleSim utility files
-#include "Fire.h"
+// #include "Fire.h"
 
 // mouse tools
-#include <Utils/MouseSelection.h>
-#include <Utils/SelectionSet.h>
-#include <Utils/SelectionTool.h>
+// #include <Utils/MouseSelection.h>
+// #include <Utils/SelectionSet.h>
+// #include <Utils/SelectionTool.h>
 // #include <Utils/TransformationTool.h>
-#include <Utils/CameraTool.h>
-#include <Utils/WidgetTool.h>
-#include <Utils/ToolChain.h>
+// #include <Utils/CameraTool.h>
+// #include <Utils/WidgetTool.h>
+// #include <Utils/ToolChain.h>
 //#include <Resources/SDLFont.h>
 #include <Resources/CairoFont.h>
+#include <Utils/FPSSurface.h>
+#include <Display/HUD.h>
 
 // Additional namespaces
 using namespace OpenEngine::Core;
 using namespace OpenEngine::Logging;
 using namespace OpenEngine::Devices;
 using namespace OpenEngine::Renderers::OpenGL;
+using namespace OpenEngine::Display::OpenGL;
 using namespace OpenEngine::Renderers;
 using namespace OpenEngine::Resources;
 using namespace OpenEngine::Utils;
@@ -82,10 +85,9 @@ struct Config {
     IEngine&              engine;
     IEnvironment*         env;
     IFrame*               frame;
-    Viewport*             viewport;
+    IRenderCanvas*              canvas;
     IViewingVolume*       viewingvolume;
     Camera*               camera;
-    Frustum*              frustum;
     IRenderer*            renderer;
     IMouse*               mouse;
     IKeyboard*            keyboard;
@@ -93,15 +95,14 @@ struct Config {
     ParticleSystem*       particleSystem;
     bool                  resourcesLoaded;
     TextureLoader*        tl;
-    MouseSelection*       ms;
-    Fire*                 fire;
+    // MouseSelection*       ms;
+    FireEffect*           fire;
     Config(IEngine& engine)
         : engine(engine)
         , frame(NULL)
-        , viewport(NULL)
+        , canvas(NULL)
         , viewingvolume(NULL)
         , camera(NULL)
-        , frustum(NULL)
         , renderer(NULL)
         , mouse(NULL)
         , keyboard(NULL)
@@ -109,7 +110,7 @@ struct Config {
         , particleSystem(NULL)
         , resourcesLoaded(false)
         , tl(NULL)
-        , ms(NULL)
+        // , ms(NULL)
         , fire(NULL)
     {}
 };
@@ -180,7 +181,6 @@ void SetupResources(Config& config) {
     ResourceManager<ITextureResource>::AddPlugin(new SDLImagePlugin());
     // ResourceManager<IFontResource>::AddPlugin(new SDLFontPlugin());
     ResourceManager<IFontResource>::AddPlugin(new CairoFontPlugin());
-
     config.resourcesLoaded = true;
 }
 
@@ -188,67 +188,63 @@ void SetupDisplay(Config& config) {
     if (config.frame         != NULL ||
         config.viewingvolume != NULL ||
         config.camera        != NULL ||
-        config.frustum       != NULL ||
-        config.viewport      != NULL)
+        config.canvas        != NULL)
         throw Exception("Setup display dependencies are not satisfied.");
 
     config.env           = new SDLEnvironment();
-    config.frame         = &config.env->GetFrame();
+    config.frame         = &config.env->CreateFrame();
     config.viewingvolume = new ViewingVolume();
     config.camera        = new Camera( *config.viewingvolume );
-    config.frustum       = new Frustum(*config.camera, 3000);
-    config.viewport      = new Viewport(*config.frame);
-    config.viewport->SetViewingVolume(config.frustum);
-
+    config.canvas        = new RenderCanvas();
+    config.frame->SetCanvas(config.canvas);
+    config.canvas->SetViewingVolume(config.camera);
     config.engine.InitializeEvent().Attach(*config.env);
     config.engine.ProcessEvent().Attach(*config.env);
     config.engine.DeinitializeEvent().Attach(*config.env);
 }
 
 void SetupRendering(Config& config) {
-    if (config.viewport == NULL ||
+    if (config.canvas == NULL ||
         config.renderer != NULL)
         throw Exception("Setup renderer dependencies are not satisfied.");
 
     // Create a renderer
-    config.renderer = new OpenGL::Renderer(config.viewport);
-
+    config.renderer = new Renderer();
+    config.canvas->SetRenderer(config.renderer);
     // Setup a rendering view
-    IRenderingView* rv = new OpenGL::RenderingView(*config.viewport);
+    IRenderingView* rv = new RenderingView();
     config.renderer->ProcessEvent().Attach(*rv);
 
     // Add rendering initialization tasks
     config.tl = new TextureLoader(*config.renderer);
     config.renderer->PreProcessEvent().Attach(*config.tl);
 
-    config.engine.InitializeEvent().Attach(*config.renderer);
-    config.engine.ProcessEvent().Attach(*config.renderer);
-    config.engine.DeinitializeEvent().Attach(*config.renderer);
+
+    // config.ms = new MouseSelection(*config.frame, *config.mouse, NULL);
+
+    config.fire = new FireEffect(*config.particleSystem);
 
 
-    config.ms = new MouseSelection(*config.frame, *config.mouse, NULL);
 
-    config.fire = new Fire(*config.particleSystem, *config.tl);
-
-    SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
+    // SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
     // TransformationTool* tt = new TransformationTool(*config.tl);
     // ss->ChangedEvent().Attach(*tt);
-    CameraTool* ct   = new CameraTool();
-    WidgetTool* wt   = new WidgetTool(*config.tl);
-    ToolChain*  tc   = new ToolChain();
-    SelectionTool* st = new SelectionTool(*ss);
-    tc->PushBackTool(wt);
-    tc->PushBackTool(ct);
-    tc->PushBackTool(st);
+    // CameraTool* ct   = new CameraTool();
+    // WidgetTool* wt   = new WidgetTool(*config.tl);
+    // ToolChain*  tc   = new ToolChain();
+    // SelectionTool* st = new SelectionTool(*ss);
+    // tc->PushBackTool(wt);
+    // tc->PushBackTool(ct);
+    // tc->PushBackTool(st);
 
-    wt->AddWidget(new FireEffectEditWidget(config.fire));
+    // wt->AddWidget(new FireEffectEditWidget(config.fire));
 
-    config.ms->BindTool(config.viewport, tc);
+    // config.ms->BindTool(config.viewport, tc);
 
-    config.renderer->PostProcessEvent().Attach(*config.ms);
-    config.mouse->MouseMovedEvent().Attach(*config.ms);
-    config.mouse->MouseButtonEvent().Attach(*config.ms);
-    config.keyboard->KeyEvent().Attach(*config.ms);
+    // config.renderer->PostProcessEvent().Attach(*config.ms);
+    // config.mouse->MouseMovedEvent().Attach(*config.ms);
+    // config.mouse->MouseButtonEvent().Attach(*config.ms);
+    // config.keyboard->KeyEvent().Attach(*config.ms);
 
 }
 
@@ -267,8 +263,13 @@ void SetupDevices(Config& config) {
     config.keyboard->KeyEvent().Attach(*quit_h);
 
 //     // Register movement handler to be able to move the camera
-    // MoveHandler* move_h = new MoveHandler(*config.camera, *config.mouse);
-    // config.keyboard->KeyEvent().Attach(*move_h);
+    BetterMoveHandler* move_h = new BetterMoveHandler(*config.camera, *config.mouse);
+    config.keyboard->KeyEvent().Attach(*move_h);
+    config.mouse->MouseMovedEvent().Attach(*move_h);
+    config.mouse->MouseButtonEvent().Attach(*move_h);
+    config.engine.InitializeEvent().Attach(*move_h);
+    config.engine.DeinitializeEvent().Attach(*move_h);
+    config.engine.ProcessEvent().Attach(*move_h);
 
     // Bind to the engine for processing time
     // config.engine.InitializeEvent().Attach(*move_h);
@@ -299,12 +300,30 @@ void SetupScene(Config& config) {
 
     // Create scene nodes
     config.scene = new SceneNode();
-    config.renderer->SetSceneRoot(config.scene);
-    config.ms->SetScene(config.scene);
+    config.canvas->SetScene(config.scene);
+    // config.ms->SetScene(config.scene);
 
-    config.scene->AddNode( config.fire->GetSceneNode() );
-    config.particleSystem->ProcessEvent().Attach(*config.fire);
+
+    // add a post process particle renderer
+    ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>(config.fire->GetParticles());
+
+    config.renderer->PostProcessEvent().Attach(*pr);
+
+    // config.scene->AddNode( config.fire->GetSceneNode() );
+    // config.particleSystem->ProcessEvent().Attach(*config.fire);
     config.fire->SetActive(true);
+
+
+    // Setup fps counter
+    FPSSurfacePtr fps = FPSSurface::Create();
+    config.tl->Load(fps, TextureLoader::RELOAD_QUEUED);
+    config.engine.ProcessEvent().Attach(*fps);
+    HUD* hud = new HUD();
+    HUD::Surface* fpshud = hud->CreateSurface(fps);
+    config.renderer->PostProcessEvent().Attach(*hud);
+    fpshud->SetPosition(HUD::Surface::LEFT, HUD::Surface::TOP);
+
+
 }
 
 void SetupDebugging(Config& config) {
