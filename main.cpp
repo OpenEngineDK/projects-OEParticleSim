@@ -91,6 +91,15 @@ ValueList Inspect(FireEffect* fire) {
     SimpleEmitter *emit = fire->GetEmitter();
     ValueList values;
 
+    /* particle count */
+        RWValueCall<SimpleEmitter, unsigned int > *v
+            = new RWValueCall<SimpleEmitter, unsigned int >(*emit,
+                                                     &SimpleEmitter::GetNumParticles,
+                                                     &SimpleEmitter::SetNumParticles);
+        v->name = "count";
+        v->properties[MIN] = 1;
+        values.push_back(v);
+
     /* Life */ {
         RWValueCall<SimpleEmitter, float > *v
             = new RWValueCall<SimpleEmitter, float >(*emit,
@@ -354,7 +363,7 @@ void SetupScene(Config& config) {
 
 
     // add a post process particle renderer
-    ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>(config.fire->GetParticles());
+    ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>(*config.fire->GetEmitter());
 
     config.renderer->PostProcessEvent().Attach(*pr);
 
