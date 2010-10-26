@@ -1,5 +1,9 @@
 # dist file for the OEParticleSim Project.
 
+dist /extensions/Inspection/Inspection.dist       http://www.openengine.dk/code/extensions/Inspection/Inspection.dist
+dist /extensions/InspectionBar/InspectionBar.dist       http://www.openengine.dk/code/extensions/InspectionBar/InspectionBar.dist
+
+
 # Main repository
 darcs     / http://openengine.dk/code/openengine
 darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
@@ -18,7 +22,7 @@ darcs /extensions/SDLImage                   http://openengine.dk/code/extension
 darcs /extensions/OBJResource                http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
 darcs /extensions/OEParticleSystem           http://openengine.dk/code/extensions/OEParticleSystem
-darcs /extensions/Effects                    http://openengine.dk/code/extensions/Effects
+# darcs /extensions/Effects                    http://openengine.dk/code/extensions/Effects
 darcs /extensions/HUD                        http://openengine.dk/code/extensions/HUD
 
 darcs-dev /extensions/OpenGLRenderer         fh.daimi.au.dk:/users/cgd/code/extensions/OpenGLRenderer

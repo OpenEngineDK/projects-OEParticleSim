@@ -24,19 +24,19 @@ Fire::Fire(OpenEngine::ParticleSystem::ParticleSystem& system,
            TextureLoader& textureLoader):
                            
     FireEffectEdit(system,
-               200,     //numParticles
-               0.04,    //emitRate
-               8.0,     //number 
-               2.0,     //numberVar
-               .8,     //life
-               0.2,     //lifeVar
-               2*OpenEngine::Math::PI,    //angle
-               0.0,   //spin
-               0.0,   //spinVar
-               10.0,    //speed
-               1.0,    //speedVar
-               Vector<3,float>(0,200.82,0),       //antigravity
-               textureLoader)
+                   200,     //numParticles
+                   0.04,    //emitRate
+                   8.0,     //number 
+                   2.0,     //numberVar
+                   .8,     //life
+                   0.2,     //lifeVar
+                   2*OpenEngine::Math::PI,    //angle
+                   0.0,   //spin
+                   0.0,   //spinVar
+                   10.0,    //speed
+                   1.0,    //speedVar
+                   Vector<3,float>(0,200.82,0),       //antigravity
+                   textureLoader)
 {
 
     ITexture2DPtr tex1 = 

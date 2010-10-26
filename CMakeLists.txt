@@ -34,5 +34,8 @@ TARGET_LINK_LIBRARIES(OEParticleSim
 #  Extensions_OEParticleSystem
   Extensions_GenericHandlers
   Extensions_OpenGLSelection
+  Extensions_AntTweakBar
+  Extensions_Inspection
+  Extensions_InspectionBar
   Extensions_HUD
 )

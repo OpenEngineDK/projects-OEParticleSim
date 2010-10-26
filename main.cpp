@@ -17,7 +17,7 @@
 #include <Display/ViewingVolume.h>
 #include <Display/Camera.h>
 #include <Display/OpenGL/RenderCanvas.h>
-
+#include <Display/AntTweakBar.h>
 // SDL implementation
 #include <Display/SDLEnvironment.h>
 
@@ -50,6 +50,8 @@
 #include <Utils/Statistics.h>
 #include <Utils/BetterMoveHandler.h>
 #include <Utils/QuitHandler.h>
+#include <Utils/InspectionBar.h>
+#include <Utils/IInspector.h>
 
 // OEParticleSim utility files
 // #include "Fire.h"
@@ -79,6 +81,49 @@ using namespace OpenEngine::Utils;
 using namespace OpenEngine::Display;
 using namespace OpenEngine::ParticleSystem;
 using namespace OpenEngine::Effects;
+
+
+namespace OpenEngine {
+    namespace Utils {
+        namespace Inspection {
+
+ValueList Inspect(FireEffect* fire) {
+    SimpleEmitter *emit = fire->GetEmitter();
+    ValueList values;
+
+    /* Life */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetLife,
+                                                     &SimpleEmitter::SetLife);
+        v->name = "life";
+        v->properties[MIN] = 0;
+        values.push_back(v);
+    }
+    /* Speed */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetSpeed,
+                                                     &SimpleEmitter::SetSpeed);
+        v->name = "speed";
+        v->properties[MIN] = 0;
+        values.push_back(v);
+    } 
+    /* Gravity */ {
+        RWValueCall<SimpleEmitter, Vector<3,float> > *v
+            = new RWValueCall<SimpleEmitter, Vector<3,float> >(*emit,
+                                                     &SimpleEmitter::GetGravity,
+                                                     &SimpleEmitter::SetGravity);
+        v->name = "gravity";
+
+        values.push_back(v);
+    }
+    return values;
+    
+}
+
+}}}
+
 
 // Configuration structure to pass around to the setup methods
 struct Config {
@@ -156,7 +201,7 @@ int main(int argc, char** argv) {
     SetupDisplay(config);
     SetupDevices(config);
     SetupParticleSystem(config);
-    SetupRendering(config);
+    SetupRendering(config);    
     SetupScene(config);
     // Possibly add some debugging stuff
     SetupDebugging(config);
@@ -191,7 +236,7 @@ void SetupDisplay(Config& config) {
         config.canvas        != NULL)
         throw Exception("Setup display dependencies are not satisfied.");
 
-    config.env           = new SDLEnvironment();
+    config.env           = new SDLEnvironment(800,600);
     config.frame         = &config.env->CreateFrame();
     config.viewingvolume = new ViewingVolume();
     config.camera        = new Camera( *config.viewingvolume );
@@ -256,20 +301,20 @@ void SetupDevices(Config& config) {
 
     // Create the mouse and keyboard input modules
     config.keyboard = config.env->GetKeyboard();
-    config.mouse = config.env->GetMouse();
+    config.mouse = config.env->GetMouse();    
 
     // Bind the quit handler
     QuitHandler* quit_h = new QuitHandler(config.engine);
     config.keyboard->KeyEvent().Attach(*quit_h);
 
 //     // Register movement handler to be able to move the camera
-    BetterMoveHandler* move_h = new BetterMoveHandler(*config.camera, *config.mouse);
-    config.keyboard->KeyEvent().Attach(*move_h);
-    config.mouse->MouseMovedEvent().Attach(*move_h);
-    config.mouse->MouseButtonEvent().Attach(*move_h);
-    config.engine.InitializeEvent().Attach(*move_h);
-    config.engine.DeinitializeEvent().Attach(*move_h);
-    config.engine.ProcessEvent().Attach(*move_h);
+    // BetterMoveHandler* move_h = new BetterMoveHandler(*config.camera, *config.mouse);
+    // config.keyboard->KeyEvent().Attach(*move_h);
+    // config.mouse->MouseMovedEvent().Attach(*move_h);
+    // config.mouse->MouseButtonEvent().Attach(*move_h);
+    // config.engine.InitializeEvent().Attach(*move_h);
+    // config.engine.DeinitializeEvent().Attach(*move_h);
+    // config.engine.ProcessEvent().Attach(*move_h);
 
     // Bind to the engine for processing time
     // config.engine.InitializeEvent().Attach(*move_h);
@@ -303,6 +348,10 @@ void SetupScene(Config& config) {
     config.canvas->SetScene(config.scene);
     // config.ms->SetScene(config.scene);
 
+    AntTweakBar *atb = new AntTweakBar();
+    atb->AttachTo(*config.renderer);
+
+
 
     // add a post process particle renderer
     ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>(config.fire->GetParticles());
@@ -312,6 +361,27 @@ void SetupScene(Config& config) {
     // config.scene->AddNode( config.fire->GetSceneNode() );
     // config.particleSystem->ProcessEvent().Attach(*config.fire);
     config.fire->SetActive(true);
+
+
+    BetterMoveHandler* move_h = new BetterMoveHandler(*config.camera, *config.mouse, true);
+
+    config.keyboard->KeyEvent().Attach(*atb);
+    config.mouse->MouseMovedEvent().Attach(*atb);
+    config.mouse->MouseButtonEvent().Attach(*atb);
+
+    config.engine.InitializeEvent().Attach(*move_h);
+    config.engine.DeinitializeEvent().Attach(*move_h);
+    config.engine.ProcessEvent().Attach(*move_h);
+
+
+    atb->KeyEvent().Attach(*move_h);   
+    atb->MouseButtonEvent().Attach(*move_h);
+    atb->MouseMovedEvent().Attach(*move_h);
+
+    ITweakBar *bar = new InspectionBar("fire",OpenEngine::Utils::Inspection::Inspect(config.fire));     
+    atb->AddBar(bar);
+    bar->SetPosition(Vector<2,float>(20,40));
+    bar->SetIconify(false);
 
 
     // Setup fps counter
@@ -337,3 +407,4 @@ void SetupDebugging(Config& config) {
     // Add Statistics module
     //config.engine.ProcessEvent().Attach(*(new OpenEngine::Utils::Statistics(1000)));
 }
+
