@@ -31,7 +31,7 @@ TARGET_LINK_LIBRARIES(OEParticleSim
   Extensions_SDL
   Extensions_SDLImage
   Extensions_OpenGLRenderer
-#  Extensions_OEParticleSystem
+  Extensions_OEParticleSystem
   Extensions_GenericHandlers
   Extensions_OpenGLSelection
   Extensions_AntTweakBar

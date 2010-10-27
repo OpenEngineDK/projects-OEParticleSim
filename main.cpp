@@ -43,6 +43,7 @@
 
 // Scene structures
 #include <Scene/SceneNode.h>
+#include <Scene/EmitterNode.h>
 
 // Utilities and logger
 #include <Logging/Logger.h>
@@ -428,14 +429,13 @@ void SetupScene(Config& config) {
 
 
     // add a post process particle renderer
-    ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>(*config.fire->GetEmitter());
+    ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>();
 
     config.renderer->PostProcessEvent().Attach(*pr);
 
-    // config.scene->AddNode( config.fire->GetSceneNode() );
+    config.scene->AddNode( config.fire->GetEmitter() );
     // config.particleSystem->ProcessEvent().Attach(*config.fire);
     config.fire->SetActive(true);
-
 
     BetterMoveHandler* move_h = new BetterMoveHandler(*config.camera, *config.mouse, true);
 
