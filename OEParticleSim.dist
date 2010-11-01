@@ -2,13 +2,14 @@
 
 dist /extensions/Inspection/Inspection.dist       http://www.openengine.dk/code/extensions/Inspection/Inspection.dist
 dist /extensions/InspectionBar/InspectionBar.dist       http://www.openengine.dk/code/extensions/InspectionBar/InspectionBar.dist
-dist /extensions/PropertyTree/PropertyTree.dist       http://www.openengine.dk/code/extensions/PropertyTree/PropertyTree.dist
+dist /extensions/OEParticleSystem/OEParticleSystem.dist       http://www.openengine.dk/code/extensions/OEParticleSystem/OEParticleSystem.dist
 
 # Main repository
 darcs     / http://openengine.dk/code/openengine
 darcs-dev / fh.daimi.au.dk:/users/cgd/code/openengine
 
 # Project repository
+
 darcs     /projects/OEParticleSim http://openengine.dk/code/projects/OEParticleSim
 darcs-dev /projects/OEParticleSim fh.daimi.au.dk:/users/cgd/code/projects/OEParticleSim
 
@@ -21,7 +22,6 @@ darcs /extensions/CairoResource              http://openengine.dk/code/extension
 darcs /extensions/SDLImage                   http://openengine.dk/code/extensions/SDLImage
 darcs /extensions/OBJResource                http://openengine.dk/code/extensions/OBJResource
 darcs /extensions/GenericHandlers            http://openengine.dk/code/extensions/GenericHandlers
-darcs /extensions/OEParticleSystem           http://openengine.dk/code/extensions/OEParticleSystem
 # darcs /extensions/Effects                    http://openengine.dk/code/extensions/Effects
 darcs /extensions/HUD                        http://openengine.dk/code/extensions/HUD
 
@@ -33,7 +33,6 @@ darcs-dev /extensions/CairoResource          fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/SDLImage               fh.daimi.au.dk:/users/cgd/code/extensions/SDLImage
 darcs-dev /extensions/OBJResource            fh.daimi.au.dk:/users/cgd/code/extensions/OBJResource
 darcs-dev /extensions/GenericHandlers        fh.daimi.au.dk:/users/cgd/code/extensions/GenericHandlers
-darcs-dev /extensions/OEParticleSystem       fh.daimi.au.dk:/users/cgd/code/extensions/OEParticleSystem
 darcs-dev /extensions/HUD                    fh.daimi.au.dk:/users/cgd/code/extensions/HUD
 
 #data
