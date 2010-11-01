@@ -54,8 +54,8 @@
 #include <Utils/InspectionBar.h>
 #include <Utils/IInspector.h>
 
+#include <Utils/PropertyTree.h>
 // OEParticleSim utility files
-// #include "Fire.h"
 
 // mouse tools
 // #include <Utils/MouseSelection.h>
@@ -88,8 +88,8 @@ namespace OpenEngine {
     namespace Utils {
         namespace Inspection {
 
-ValueList Inspect(FireEffect* fire) {
-    SimpleEmitter *emit = fire->GetEmitter();
+ValueList Inspect(SimpleEmitter* emit) {
+    // SimpleEmitter *emit = fire->GetEmitter();
     ValueList values;
 
     /* particle count */ {
@@ -218,7 +218,7 @@ struct Config {
     bool                  resourcesLoaded;
     TextureLoader*        tl;
     // MouseSelection*       ms;
-    FireEffect*           fire;
+    SimpleEmitter*           emitter;
     Config(IEngine& engine)
         : engine(engine)
         , frame(NULL)
@@ -233,7 +233,7 @@ struct Config {
         , resourcesLoaded(false)
         , tl(NULL)
         // , ms(NULL)
-        , fire(NULL)
+        , emitter(NULL)
     {}
 };
 
@@ -296,6 +296,7 @@ void SetupResources(Config& config) {
     // @todo we should check that this path exists
     string resources = "projects/OEParticleSim/data/";
     DirectoryManager::AppendPath(resources);
+    DirectoryManager::AppendPath("projects/OEParticleSim/");
 
     // load resource plug-ins
     //ResourceManager<IModelResource>::AddPlugin(new OBJPlugin());
@@ -344,7 +345,27 @@ void SetupRendering(Config& config) {
 
     // config.ms = new MouseSelection(*config.frame, *config.mouse, NULL);
 
-    config.fire = new FireEffect(*config.particleSystem);
+    string confPath = DirectoryManager::FindFileInPath("emitter.yaml");
+    PropertyTree* ptree = new PropertyTree(confPath);
+    config.engine.InitializeEvent().Attach(*ptree);
+    config.engine.ProcessEvent().Attach(*ptree);
+    config.engine.DeinitializeEvent().Attach(*ptree);
+    config.emitter = new SimpleEmitter(*config.particleSystem, ptree);
+    // config.emitter = new SimpleEmitter(*config.particleSystem, 
+    //                                    200,
+    //                                    0.001,
+    //                                    1.0,0.0,
+    //                                    0.2,
+    //                                    0.0,0.0,
+    //                                    20.0, 0.0,
+    //                                    10.0,0.0);
+    config.particleSystem->ProcessEvent().Attach(*config.emitter);
+    ITexture2DPtr tex1 = 
+        // ResourceManager<ITexture2D>::Create("Smoke/smoke01.tga");
+        // ResourceManager<ITexture2D>::Create("fire.jpg");
+        //ResourceManager<ITexture2D>::Create("RealFlame_02.png");
+        ResourceManager<ITexture2D>::Create("star.jpg");
+    config.emitter->SetTexture(tex1);
 
     // SelectionSet<ISceneNode>* ss = new SelectionSet<ISceneNode>();
     // TransformationTool* tt = new TransformationTool(*config.tl);
@@ -429,13 +450,10 @@ void SetupScene(Config& config) {
 
 
     // add a post process particle renderer
-    ParticleRenderer<FireEffect::TYPE>* pr = new ParticleRenderer<FireEffect::TYPE>();
-
+    ParticleRenderer<SimpleEmitter::TYPE>* pr = new ParticleRenderer<SimpleEmitter::TYPE>();
     config.renderer->PostProcessEvent().Attach(*pr);
-
-    config.scene->AddNode( config.fire->GetEmitter() );
-    // config.particleSystem->ProcessEvent().Attach(*config.fire);
-    config.fire->SetActive(true);
+    config.scene->AddNode( config.emitter );
+    config.emitter->SetActive(true);
 
     BetterMoveHandler* move_h = new BetterMoveHandler(*config.camera, *config.mouse, true);
 
@@ -452,7 +470,7 @@ void SetupScene(Config& config) {
     atb->MouseButtonEvent().Attach(*move_h);
     atb->MouseMovedEvent().Attach(*move_h);
 
-    ITweakBar *bar = new InspectionBar("fire",OpenEngine::Utils::Inspection::Inspect(config.fire));     
+    ITweakBar *bar = new InspectionBar("emitter",OpenEngine::Utils::Inspection::Inspect(config.emitter));     
     atb->AddBar(bar);
     bar->SetPosition(Vector<2,float>(20,40));
     bar->SetIconify(false);

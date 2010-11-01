@@ -1,0 +1,31 @@
+# Yaml configuration of a particle emitter
+# search for yaml-mode to edit nicely with emacs
+#
+
+init:
+  particles: 200
+  angle: 0.4
+  life: 2.5
+  lifevar: 0.3
+  spin: 0.0
+  spinvar: 0.0
+  speed: 30.0
+  speedvar: 4.0
+  size: 15.0
+  sizevar: 0.0
+  emitrate: 0.008
+  gravity: [0.0,100.0,0.0]
+
+color:
+  - time: 0.0
+    value: [1.0,1.0,1.0,1.0]
+  - time: 1.0
+    value: [1.0,1.0,0.0,0.5]
+
+size:
+  - time: 0.0
+    value: 20.0
+  - time: 0.5
+    value: 5.0
+  - time: 1.0
+    value: 50.0

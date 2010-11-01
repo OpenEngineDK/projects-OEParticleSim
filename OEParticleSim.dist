@@ -2,7 +2,7 @@
 
 dist /extensions/Inspection/Inspection.dist       http://www.openengine.dk/code/extensions/Inspection/Inspection.dist
 dist /extensions/InspectionBar/InspectionBar.dist       http://www.openengine.dk/code/extensions/InspectionBar/InspectionBar.dist
-
+dist /extensions/PropertyTree/PropertyTree.dist       http://www.openengine.dk/code/extensions/PropertyTree/PropertyTree.dist
 
 # Main repository
 darcs     / http://openengine.dk/code/openengine

@@ -38,4 +38,5 @@ TARGET_LINK_LIBRARIES(OEParticleSim
   Extensions_Inspection
   Extensions_InspectionBar
   Extensions_HUD
+  Extensions_PropertyTree
 )
