@@ -107,8 +107,8 @@ ValueList Inspect(SimpleEmitter* emit) {
                                                      &SimpleEmitter::GetEmitInterval,
                                                      &SimpleEmitter::SetEmitInterval);
         v->name = "emit interval";
-        v->properties[MIN] = 0.001;
-        v->properties[STEP] = 0.001;
+        v->properties[MIN] = 0.0001;
+        v->properties[STEP] = 0.0001;
         values.push_back(v);
     }
     /* angle */ {
@@ -122,6 +122,18 @@ ValueList Inspect(SimpleEmitter* emit) {
         v->properties[MAX] = Math::PI*2;
         values.push_back(v);
     }
+
+    /* radius */ {
+        RWValueCall<SimpleEmitter, float > *v
+            = new RWValueCall<SimpleEmitter, float >(*emit,
+                                                     &SimpleEmitter::GetRadius,
+                                                     &SimpleEmitter::SetRadius);
+        v->name = "spherical radius";
+        v->properties[MIN] = 0.0;
+        v->properties[STEP] = 0.01;
+        values.push_back(v);
+    }
+
     /* Life */ {
         RWValueCall<SimpleEmitter, float > *v
             = new RWValueCall<SimpleEmitter, float >(*emit,
