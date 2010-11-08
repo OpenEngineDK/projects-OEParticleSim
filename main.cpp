@@ -16,7 +16,8 @@
 // Display structures
 #include <Display/ViewingVolume.h>
 #include <Display/Camera.h>
-#include <Display/OpenGL/RenderCanvas.h>
+#include <Display/RenderCanvas.h>
+#include <Display/OpenGL/TextureCopy.h>
 #include <Display/AntTweakBar.h>
 // SDL implementation
 #include <Display/SDLEnvironment.h>
@@ -330,7 +331,7 @@ void SetupDisplay(Config& config) {
     config.frame         = &config.env->CreateFrame();
     config.viewingvolume = new ViewingVolume();
     config.camera        = new Camera( *config.viewingvolume );
-    config.canvas        = new RenderCanvas();
+    config.canvas        = new RenderCanvas(new TextureCopy());
     config.frame->SetCanvas(config.canvas);
     config.canvas->SetViewingVolume(config.camera);
     config.engine.InitializeEvent().Attach(*config.env);
