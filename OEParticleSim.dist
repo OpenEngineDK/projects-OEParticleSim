@@ -36,7 +36,7 @@ darcs-dev /extensions/GenericHandlers        fh.daimi.au.dk:/users/cgd/code/exte
 darcs-dev /extensions/HUD                    fh.daimi.au.dk:/users/cgd/code/extensions/HUD
 
 #libaries
-win32 /libraries /libraries http://openengine.dk/data/libraries/sdlttf-win32.zip
+win32 /libraries http://openengine.dk/data/libraries/sdlttf-win32.zip
 
 #data
 any /projects/OEParticleSim/data/Fonts  http://openengine.dk/data/fonts/freefont-ttf-20090104.tar.gz
