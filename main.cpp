@@ -207,7 +207,50 @@ ValueList Inspect(SimpleEmitter* emit) {
         v->name = "gravity";
 
         values.push_back(v);
+    }     
+    /* Color1 */ {
+        RWValueCall<SimpleEmitter, Vector<4,float> > *v
+            = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
+                                                     &SimpleEmitter::GetColor1,
+                                                     &SimpleEmitter::SetColor1);
+        v->isColor = true;
+        v->name = "color1";
+
+        values.push_back(v);
     }
+    /* Color2 */ {
+        RWValueCall<SimpleEmitter, Vector<4,float> > *v
+            = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
+                                                     &SimpleEmitter::GetColor2,
+                                                     &SimpleEmitter::SetColor2);
+        v->isColor = true;
+        v->name = "color2";
+
+        values.push_back(v);
+    }    
+
+    /* Color3 */ {
+        RWValueCall<SimpleEmitter, Vector<4,float> > *v
+            = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
+                                                     &SimpleEmitter::GetColor3,
+                                                     &SimpleEmitter::SetColor3);
+        v->isColor = true;
+        v->name = "color3";
+
+        values.push_back(v);
+    }    
+
+    /* Color4 */ {
+        RWValueCall<SimpleEmitter, Vector<4,float> > *v
+            = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
+                                                     &SimpleEmitter::GetColor4,
+                                                     &SimpleEmitter::SetColor4);
+        v->isColor = true;
+        v->name = "color4";
+
+        values.push_back(v);
+    }    
+
     return values;
     
 }
@@ -360,10 +403,10 @@ void SetupRendering(Config& config) {
 
     string confPath = DirectoryManager::FindFileInPath("emitter.yaml");
     PropertyTree* ptree = new PropertyTree(confPath);
-    config.engine.InitializeEvent().Attach(*ptree);
+    //config.engine.InitializeEvent().Attach(*ptree);
     config.engine.ProcessEvent().Attach(*ptree);
-    config.engine.DeinitializeEvent().Attach(*ptree);
-    config.emitter = new SimpleEmitter(*config.particleSystem, ptree);
+    //config.engine.DeinitializeEvent().Attach(*ptree);
+    config.emitter = new SimpleEmitter(*config.particleSystem, ptree->GetRootNode());
     // config.emitter = new SimpleEmitter(*config.particleSystem, 
     //                                    200,
     //                                    0.001,
