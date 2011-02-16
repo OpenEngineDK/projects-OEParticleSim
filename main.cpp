@@ -207,8 +207,10 @@ ValueList Inspect(SimpleEmitter* emit) {
         v->name = "gravity";
 
         values.push_back(v);
-    }     
-    /* Color1 */ {
+    }
+    /*     
+    // Color1
+    {
         RWValueCall<SimpleEmitter, Vector<4,float> > *v
             = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
                                                      &SimpleEmitter::GetColor1,
@@ -218,7 +220,8 @@ ValueList Inspect(SimpleEmitter* emit) {
 
         values.push_back(v);
     }
-    /* Color2 */ {
+    // Color2
+    {
         RWValueCall<SimpleEmitter, Vector<4,float> > *v
             = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
                                                      &SimpleEmitter::GetColor2,
@@ -229,7 +232,8 @@ ValueList Inspect(SimpleEmitter* emit) {
         values.push_back(v);
     }    
 
-    /* Color3 */ {
+    // Color3
+    {
         RWValueCall<SimpleEmitter, Vector<4,float> > *v
             = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
                                                      &SimpleEmitter::GetColor3,
@@ -240,7 +244,8 @@ ValueList Inspect(SimpleEmitter* emit) {
         values.push_back(v);
     }    
 
-    /* Color4 */ {
+    // Color4
+    {
         RWValueCall<SimpleEmitter, Vector<4,float> > *v
             = new RWValueCall<SimpleEmitter, Vector<4,float> >(*emit,
                                                      &SimpleEmitter::GetColor4,
@@ -250,7 +255,7 @@ ValueList Inspect(SimpleEmitter* emit) {
 
         values.push_back(v);
     }    
-
+    */
     return values;
     
 }
@@ -406,7 +411,7 @@ void SetupRendering(Config& config) {
     //config.engine.InitializeEvent().Attach(*ptree);
     config.engine.ProcessEvent().Attach(*ptree);
     //config.engine.DeinitializeEvent().Attach(*ptree);
-    config.emitter = new SimpleEmitter(*config.particleSystem, ptree->GetRootNode());
+    config.emitter = new SimpleEmitter(*config.particleSystem, ptree);
     // config.emitter = new SimpleEmitter(*config.particleSystem, 
     //                                    200,
     //                                    0.001,
